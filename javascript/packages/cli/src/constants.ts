@@ -1,5 +1,5 @@
 // CONSTANTS
-const AVAILABLE_PROVIDERS = ["podman", "kubernetes", "native"];
+const AVAILABLE_PROVIDERS = ["podman", "kubernetes", "native", "kurtosis"];
 const DEFAULT_BALANCE = 2000000000000;
 const DEFAULT_GLOBAL_TIMEOUT = 1200; // 20 mins
 const DEFAULT_PROVIDER = "kubernetes";

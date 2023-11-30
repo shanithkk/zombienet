@@ -82,7 +82,7 @@ program
   )
   .addOption(
     new Option("-p, --provider <provider>", "Override provider to use").choices(
-      ["podman", "kubernetes", "native"],
+      ["podman", "kubernetes", "native", "kurtosis"],
     ),
   )
   .addOption(

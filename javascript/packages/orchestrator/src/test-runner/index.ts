@@ -88,44 +88,44 @@ export async function run(
   suite.beforeAll("launching", async function () {
     const launchTimeout = config.settings?.timeout || 500;
     this.timeout(launchTimeout * 1000);
-    try {
-      if (!runningNetworkSpecPath) {
-        console.log(`\t Launching network... this can take a while.`);
-        network = await start(creds!, config, {
-          spawnConcurrency: concurrency,
-          inCI,
-          logType,
-          dir,
-          force,
-        });
-      } else {
-        const runningNetworkSpec: any = require(runningNetworkSpecPath);
-        if (provider !== runningNetworkSpec.client.providerName)
-          throw new Error(
-            `Invalid provider, the provider set doesn't match with the running network definition`,
-          );
+    // try {
+    //   if (!runningNetworkSpecPath) {
+    //     console.log(`\t Launching network... this can take a while.`);
+    //     network = await start(creds!, config, {
+    //       spawnConcurrency: concurrency,
+    //       inCI,
+    //       logType,
+    //       dir,
+    //       force,
+    //     });
+    //   } else {
+    //     const runningNetworkSpec: any = require(runningNetworkSpecPath);
+    //     if (provider !== runningNetworkSpec.client.providerName)
+    //       throw new Error(
+    //         `Invalid provider, the provider set doesn't match with the running network definition`,
+    //       );
 
-        const { client, namespace, tmpDir } = runningNetworkSpec;
-        // initialize the Client
-        const initClient = Providers.get(
-          runningNetworkSpec.client.providerName,
-        ).initClient(client.configPath, namespace, tmpDir);
-        // initialize the network
-        network = rebuildNetwork(initClient, runningNetworkSpec);
-      }
+    //     const { client, namespace, tmpDir } = runningNetworkSpec;
+    //     // initialize the Client
+    //     const initClient = Providers.get(
+    //       runningNetworkSpec.client.providerName,
+    //     ).initClient(client.configPath, namespace, tmpDir);
+    //     // initialize the network
+    //     network = rebuildNetwork(initClient, runningNetworkSpec);
+    //   }
 
-      network.showNetworkInfo(config.settings.provider);
+    //   network.showNetworkInfo(config.settings.provider);
 
-      await sleep(5 * 1000);
-      return;
-    } catch (err) {
-      console.log(
-        `\n${decorators.red(
-          "Error launching the network!",
-        )} \t ${decorators.bright(err)}`,
-      );
-      exitMocha(100);
-    }
+    //   await sleep(5 * 1000);
+    //   return;
+    // } catch (err) {
+    //   console.log(
+    //     `\n${decorators.red(
+    //       "Error launching the network!",
+    //     )} \t ${decorators.bright(err)}`,
+    //   );
+    //   exitMocha(100);
+    // }
   });
 
   suite.afterAll("teardown", async function () {
