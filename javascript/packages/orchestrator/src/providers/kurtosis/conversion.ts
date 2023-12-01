@@ -38,6 +38,7 @@ export function getKurtosisConfig(config: LaunchConfig) {
   });
 
   let parachain;
+  let parachains :any [] =[];
   for (let para of config.parachains) {
     let node: any[] = [];
     if (para.collator != undefined) {
@@ -63,6 +64,7 @@ export function getKurtosisConfig(config: LaunchConfig) {
       name: para.chain,
       nodes: node,
     };
+    parachains.push(parachain)
   }
 
   let kurtosisConfig = {
@@ -71,7 +73,7 @@ export function getKurtosisConfig(config: LaunchConfig) {
       name: relay_chain_name,
       nodes: nodes,
     },
-    para: parachain,
+    para: parachains,
   };
 
   return JSON.stringify(kurtosisConfig);

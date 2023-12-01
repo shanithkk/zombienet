@@ -15,7 +15,7 @@ async function KurtosisRun(param: string) {
     StarlarkRunConfig.WithRelativePathToMainFile("./main.star"),
     StarlarkRunConfig.WithDryRun(false),
     StarlarkRunConfig.WithMainFunctionName("run"),
-    StarlarkRunConfig.WithSerializedParams('{ "chain-type": "testnet", "relaychain": { }, "para": [ { "name":"acala", "nodes": [ { "name": "alice", "node-type": "validator", "prometheus": false }, { "name": "bob", "node-type": "full", "prometheus": false } ] } ] }'),
+    StarlarkRunConfig.WithSerializedParams(param),
   );
 
   const kurtosisContext = newKurtosisContextResult.match(
