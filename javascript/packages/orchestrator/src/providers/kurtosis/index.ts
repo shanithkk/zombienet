@@ -1,7 +1,9 @@
 import { KurtosisContext, StarlarkRunConfig } from "kurtosis-sdk";
+import { getKurtosisConfig } from "./conversion";
 
 export const provider = {
   KurtosisRun,
+  getKurtosisConfig,
 };
 
 async function KurtosisRun(param: string) {
@@ -17,7 +19,6 @@ async function KurtosisRun(param: string) {
     StarlarkRunConfig.WithMainFunctionName("run"),
     StarlarkRunConfig.WithSerializedParams(param),
   );
-
   const kurtosisContext = newKurtosisContextResult.match(
     async (sdk) => {
       const enclaveName = "kurtosis";

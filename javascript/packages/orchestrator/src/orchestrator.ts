@@ -49,7 +49,6 @@ import { spawnNode } from "./spawner";
 import { setSubstrateCliArgsVersion } from "./substrateCliArgsHelper";
 import { ComputedNetwork, LaunchConfig } from "./configTypes";
 import { Node, Parachain } from "./sharedTypes";
-import { getKurtosisConfig } from "./providers/kurtosis/conversion";
 
 const debug = require("debug")("zombie");
 
@@ -93,9 +92,10 @@ export async function start(
     const networkSpec: ComputedNetwork =
       await generateNetworkSpec(launchConfig);
 
-    const { KurtosisRun } = getProvider(networkSpec.settings.provider);
+    const { KurtosisRun, getKurtosisConfig } = getProvider(
+      networkSpec.settings.provider,
+    );
     const param = getKurtosisConfig(launchConfig);
-    console.log(param);
     await KurtosisRun(param);
   } else {
     try {
@@ -584,23 +584,27 @@ export async function start(
   }
 }
 
-// export async function test(
-//   credentials: string,
-//   networkConfig: LaunchConfig,
-//   cb: (network: Network) => void,
-// ) {
-//   let network: Network | undefined;
-//   try {
-//     network = await start(credentials, networkConfig, { force: true });
-//     await cb(network);
-//   } catch (error) {
-//     console.log(
-//       `\n ${decorators.red("Error: ")} \t ${decorators.bright(error)}\n`,
-//     );
-//   } finally {
-//     if (network) {
-//       await network.dumpLogs();
-//       await network.stop();
-//     }
-//   }
-// }
+export async function test(
+  credentials: string,
+  networkConfig: LaunchConfig,
+  cb: (network: Network) => void,
+) {
+  let network: Network | undefined;
+  try {
+    if (networkConfig.settings.provider != "kurtosis") {
+      network = await start(credentials, networkConfig, { force: true });
+      if (network != undefined) {
+        await cb(network);
+      }
+    }
+  } catch (error) {
+    console.log(
+      `\n ${decorators.red("Error: ")} \t ${decorators.bright(error)}\n`,
+    );
+  } finally {
+    if (network) {
+      await network.dumpLogs();
+      await network.stop();
+    }
+  }
+}
