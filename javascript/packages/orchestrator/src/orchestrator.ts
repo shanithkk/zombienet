@@ -92,11 +92,43 @@ export async function start(
     const networkSpec: ComputedNetwork =
       await generateNetworkSpec(launchConfig);
 
-    const { KurtosisRun, getKurtosisConfig } = getProvider(
+    const { KurtosisRun, getKurtosisConfig, initClient } = getProvider(
       networkSpec.settings.provider,
     );
     const param = getKurtosisConfig(launchConfig);
     await KurtosisRun(param);
+
+    const randomBytes = networkSpec.settings.provider === "kurtosis" ? 4 : 16;
+    const namespace = `zombie-${generateNamespace(randomBytes)}`;
+    const tmpDir = opts.dir
+      ? { path: opts.dir }
+      : await tmp.dir({ prefix: `${namespace}_` });
+
+    const client: Client = initClient(credentials, namespace, tmpDir.path);
+    network = new Network(client, namespace, tmpDir.path);
+    if (options?.setGlobalNetwork) {
+      options.setGlobalNetwork(network);
+    }
+
+    const zombieTable = new CreateLogTable({
+      head: [
+        decorators.green("🧟 Zombienet 🧟"),
+        decorators.green("Initiation"),
+      ],
+      colWidths: [20, 100],
+      doubleBorder: true,
+    });
+
+    zombieTable.pushTo([
+      [
+        decorators.green("Provider"),
+        decorators.blue(networkSpec.settings.provider),
+      ],
+      [decorators.green("Namespace"), namespace],
+      [decorators.green("Temp Dir"), tmpDir.path],
+    ]);
+
+    zombieTable.print();
   } else {
     try {
       // Parse and build Network definition

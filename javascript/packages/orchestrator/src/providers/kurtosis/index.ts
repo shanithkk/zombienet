@@ -1,9 +1,11 @@
 import { KurtosisContext, StarlarkRunConfig } from "kurtosis-sdk";
 import { getKurtosisConfig } from "./conversion";
+import { KurtosisClient, initClient } from "./kurtosisClient";
 
 export const provider = {
   KurtosisRun,
   getKurtosisConfig,
+  initClient,
 };
 
 async function KurtosisRun(param: string) {
